@@ -1,0 +1,89 @@
+# ============================================================
+# System Configuration - Speed Limit Detection System
+# Modify these values to tune performance for your environment
+# ============================================================
+
+# --- Model Configuration ---
+model:
+  # Path to your trained YOLOv8 speed-limit model
+  speed_sign_weights: "models/speed_limit_model.pt"
+  # Pretrained COCO model for vehicle detection
+  vehicle_weights: "yolov8n.pt"           # auto-downloaded by ultralytics
+  confidence_threshold: 0.50             # Minimum detection confidence (0-1)
+  iou_threshold: 0.45                    # NMS IoU threshold
+  device: "cpu"                          # "cpu" | "cuda" | "mps" (Apple Silicon)
+  imgsz: 640                             # Inference image size (pixels)
+
+# --- Video / Camera Settings ---
+video:
+  source: 0                              # 0 = webcam, or "path/to/video.mp4"
+  frame_skip: 2                          # Process every Nth frame (1 = every frame)
+  resize_width: 1280                     # Resize frame for processing (speed)
+  resize_height: 720
+  display_width: 1280
+  display_height: 720
+  target_fps: 30
+
+# --- OCR Configuration ---
+ocr:
+  engine: "tesseract"                    # tesseract (only option for now)
+  tesseract_config: "--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789"
+  min_confidence: 40                     # Tesseract confidence threshold (0-100)
+  padding: 10                            # Pixels to pad crop around detected sign
+  upscale_factor: 2.5                    # Upscale small crops for better OCR
+  preprocessing: true                    # Apply image preprocessing before OCR
+
+# --- Tracking (DeepSORT) ---
+tracking:
+  enabled: true
+  max_age: 30                            # Max frames to keep lost track alive
+  n_init: 3                              # Frames before track is confirmed
+  max_cosine_distance: 0.4
+  nn_budget: 100
+
+# --- Vehicle Classes (COCO IDs) ---
+vehicles:
+  class_ids: [2, 3, 5, 7]               # car, motorcycle, bus, truck
+  class_names:
+    2: "Car"
+    3: "Motorcycle"
+    5: "Bus"
+    7: "Truck"
+
+# --- Violation Logic ---
+violation:
+  enabled: true
+  simulated_speed_min: 20               # Random vehicle speed range (km/h)
+  simulated_speed_max: 120
+  speed_tolerance: 5                    # km/h buffer before flagging violation
+
+# --- Logging ---
+logging:
+  enabled: true
+  log_dir: "logs"
+  csv_file: "logs/detections.csv"
+  json_file: "logs/detections.json"
+  log_interval: 1                       # Log every N detected frames
+  console_level: "INFO"                 # DEBUG | INFO | WARNING | ERROR
+
+# --- Display / UI ---
+display:
+  show_fps: true
+  show_confidence: true
+  show_vehicle_speed: true
+  show_violation_alert: true
+  font_scale: 0.6
+  box_thickness: 2
+  colors:
+    speed_sign: [0, 255, 0]             # Green (BGR)
+    vehicle: [255, 165, 0]             # Orange
+    violation: [0, 0, 255]             # Red
+    text_bg: [0, 0, 0]                 # Black
+    fps_text: [255, 255, 0]            # Yellow
+
+# --- Output ---
+output:
+  save_video: false                      # Save annotated output video
+  output_path: "output/result.mp4"
+  save_snapshots: false                  # Save frames on violation
+  snapshot_dir: "output/snapshots"

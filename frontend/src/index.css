@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-slate-950 text-slate-200;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+
+  /* Panel / card base */
+  .panel {
+    @apply bg-slate-900 border border-slate-800 rounded-xl overflow-hidden;
+  }
+
+  .panel-header {
+    @apply px-4 py-3 border-b border-slate-800 flex items-center justify-between;
+  }
+
+  /* Status badge variants */
+  .badge-safe {
+    @apply bg-safe/10 text-safe border border-safe/30 rounded-full px-3 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider;
+  }
+
+  .badge-warn {
+    @apply bg-warn/10 text-warn border border-warn/30 rounded-full px-3 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider;
+  }
+
+  .badge-danger {
+    @apply bg-danger/10 text-danger border border-danger/30 rounded-full px-3 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider;
+  }
+
+  .badge-neutral {
+    @apply bg-slate-800 text-slate-400 border border-slate-700 rounded-full px-3 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider;
+  }
+
+  .badge-cyan {
+    @apply bg-cyan/10 text-cyan border border-cyan/30 rounded-full px-3 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider;
+  }
+
+  /* Metric display */
+  .metric-value {
+    @apply font-display text-4xl font-bold tracking-tight leading-none;
+  }
+
+  .metric-label {
+    @apply text-xs font-mono text-slate-500 uppercase tracking-widest mt-1;
+  }
+
+  /* Toggle switch */
+  .toggle-track {
+    @apply relative w-10 h-5 rounded-full transition-colors duration-200 cursor-pointer;
+  }
+
+  .toggle-thumb {
+    @apply absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200;
+  }
+
+  /* Scanline overlay for camera feeds */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* Corner bracket decoration for video panels */
+  .corner-brackets::before,
+  .corner-brackets::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: rgba(6, 182, 212, 0.6);
+    border-style: solid;
+  }
+
+  .corner-brackets::before {
+    top: 8px;
+    left: 8px;
+    border-width: 2px 0 0 2px;
+  }
+
+  .corner-brackets::after {
+    bottom: 8px;
+    right: 8px;
+    border-width: 0 2px 2px 0;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .font-ui {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+  }
+
+  .text-glow-safe {
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+
+  .text-glow-danger {
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+  }
+
+  .text-glow-warn {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  }
+
+  .bg-grid {
+    background-image: var(--tw-gradient-stops);
+  }
+}
+
+/* Violation flash animation */
+@keyframes violation-flash {
+
+  0%,
+  100% {
+    background-color: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+
+  50% {
+    background-color: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.9);
+  }
+}
+
+.violation-flash {
+  animation: violation-flash 0.7s ease-in-out infinite;
+}
+
+/* Processing pulse ring */
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.ping-slow {
+  animation: ping-slow 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
