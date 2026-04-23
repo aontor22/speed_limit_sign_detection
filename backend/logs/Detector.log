@@ -25,3 +25,5 @@
 2026-04-22 23:19:06 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
 2026-04-23 00:24:55 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
 2026-04-23 00:24:55 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-23 21:36:55 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-23 21:36:55 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
