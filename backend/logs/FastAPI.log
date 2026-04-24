@@ -35,3 +35,4 @@
 2026-04-24 22:50:50 [INFO    ] FastAPI — Video probe: 161 frames @ 24.0fps = 6.7s  frame_skip=2
 2026-04-24 22:52:04 [INFO    ] FastAPI — Video done: 80 frames in 74.25s (1.1 eff-fps)
 2026-04-24 22:53:06 [INFO    ] FastAPI — process-media: 'road1001.jpeg' kind=image skip=2
+2026-04-24 22:53:21 [INFO    ] FastAPI — process-media: 'road1002.jpeg' kind=image skip=2
