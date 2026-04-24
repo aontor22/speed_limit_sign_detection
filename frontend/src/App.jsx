@@ -25,14 +25,15 @@
  */
 
 import React from 'react'
-import { useDetection }    from './hooks/useDetection.js'
-import Header              from './components/Dashboard/Header.jsx'
-import CameraFeed          from './components/Camera/CameraFeed.jsx'
-import ProcessedFeed       from './components/Camera/ProcessedFeed.jsx'
-import ViolationAlert      from './components/Detection/ViolationAlert.jsx'
-import DetectionStats      from './components/Detection/DetectionStats.jsx'
-import ControlPanel        from './components/Controls/ControlPanel.jsx'
-import SessionLog          from './components/Logs/SessionLog.jsx'
+import { useDetection } from './hooks/useDetection.js'
+import Header from './components/Dashboard/Header.jsx'
+import CameraFeed from './components/Camera/CameraFeed.jsx'
+import ProcessedFeed from './components/Camera/ProcessedFeed.jsx'
+import ViolationAlert from './components/Detection/ViolationAlert.jsx'
+import DetectionStats from './components/Detection/DetectionStats.jsx'
+import ControlPanel from './components/Controls/ControlPanel.jsx'
+import SessionLog from './components/Logs/SessionLog.jsx'
+import MediaUploadPanel from './components/MediaUpload/MediaUploadPanel.jsx'
 
 export default function App() {
   const {
@@ -110,6 +111,12 @@ export default function App() {
             <DetectionStats
               stats={stats}
               detectionResult={detectionResult}
+            />
+
+            {/* Upload Panel (NEW - TOP CONTROL INPUT) */}
+            <MediaUploadPanel
+              isRunning={isRunning}
+              onOptionChange={updateOption}
             />
 
             {/* Controls at bottom */}
