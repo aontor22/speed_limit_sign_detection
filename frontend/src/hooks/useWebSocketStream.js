@@ -78,6 +78,7 @@ export function useWebSocketStream() {
       } catch {
         return
       }
+      if (!msg || typeof msg !== 'object') return
 
       // Throttled ack — server dropped the frame, update counter only
       if (msg.throttled) {
