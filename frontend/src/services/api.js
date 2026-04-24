@@ -18,7 +18,7 @@ import axios from 'axios'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '',
-  timeout: 8000,        // 8s hard limit per frame request
+  timeout: 20000,        // 20s hard limit per frame request
   headers: {
     Accept: 'application/json',
   },
@@ -54,7 +54,7 @@ apiClient.interceptors.response.use(
  */
 export async function processFrame(frameBlob, options = {}, signal = null) {
   const formData = new FormData()
-  formData.append('file', frameBlob, 'frame.jpg')
+  formData.append('frame', frameBlob, 'frame.jpg')
 
   // Pass processing flags as query params (keep body for binary only)
   const params = {

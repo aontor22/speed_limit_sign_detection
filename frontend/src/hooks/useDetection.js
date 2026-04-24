@@ -1,32 +1,9 @@
-/**
- * hooks/useDetection.js
- * =====================
- * Central detection pipeline hook. Owns all real-time state.
- *
- * Responsibilities:
- *  - Manages webcam stream lifecycle (start / stop / error)
- *  - Captures frames from <canvas> at a throttled rate
- *  - Sends frames to backend via processFrame()
- *  - Handles in-flight request cancellation (AbortController)
- *  - Tracks FPS (both capture FPS and backend response FPS)
- *  - Accumulates session detection log
- *  - Exposes clean API to UI components
- *
- * Performance design:
- *  - A single setInterval drives frame capture (not requestAnimationFrame)
- *    because we want a stable sub-30fps rate, not vsync speed
- *  - We track `isBusy` to skip frames while a request is in-flight
- *    → This gives us natural back-pressure without a queue
- *  - Each new request cancels the previous via AbortController
- *    → Prevents stale responses from overwriting newer data
- */
-
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { processFrame } from '../services/api.js'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DEFAULT_CAPTURE_INTERVAL_MS = 150   // ~6-7 FPS effective (safe for most backends)
+const DEFAULT_CAPTURE_INTERVAL_MS = 300   // ~6-7 FPS effective (safe for most backends)
 const MAX_LOG_ENTRIES = 200               // Session history limit
 const JPEG_QUALITY = 0.82                 // Canvas toBlob quality (0–1)
 

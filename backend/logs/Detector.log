@@ -27,3 +27,17 @@
 2026-04-23 00:24:55 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
 2026-04-23 21:36:55 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
 2026-04-23 21:36:55 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 20:50:18 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 20:50:19 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 20:52:43 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 20:52:43 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 20:57:34 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 20:57:34 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 20:58:29 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 20:58:30 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 21:36:38 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 21:36:38 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 21:41:16 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 21:41:16 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
+2026-04-24 21:41:35 [INFO    ] Detector — Speed-sign model loaded from 'models/speed_limit_model.pt' on cpu
+2026-04-24 21:41:35 [INFO    ] Detector — Vehicle model loaded: 'yolov8n.pt' on cpu
