@@ -10,13 +10,13 @@ const JPEG_QUALITY = 0.82                 // Canvas toBlob quality (0–1)
 // ─── Initial State ────────────────────────────────────────────────────────────
 
 const initialStats = {
-  captureFps:      0,
-  responseFps:     0,
-  avgLatencyMs:    0,
-  totalFrames:     0,
+  captureFps: 0,
+  responseFps: 0,
+  avgLatencyMs: 0,
+  totalFrames: 0,
   totalDetections: 0,
   totalViolations: 0,
-  droppedFrames:   0,
+  droppedFrames: 0,
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -24,36 +24,45 @@ const initialStats = {
 export function useDetection() {
 
   // ── Refs (mutable, no re-render) ─────────────────────────────────────────
-  const videoRef        = useRef(null)    // <video> DOM element
-  const canvasRef       = useRef(null)    // Off-screen <canvas> for frame capture
-  const streamRef       = useRef(null)    // MediaStream
-  const intervalRef     = useRef(null)    // setInterval handle
-  const abortRef        = useRef(null)    // AbortController for current request
-  const isBusyRef       = useRef(false)   // True while a request is in-flight
-  const latencyBuf      = useRef([])      // Rolling latency samples
+  const videoRef = useRef(null)    // <video> DOM element
+  const canvasRef = useRef(null)    // Off-screen <canvas> for frame capture
+  const streamRef = useRef(null)    // MediaStream
+  const intervalRef = useRef(null)    // setInterval handle
+  const abortRef = useRef(null)    // AbortController for current request
+  const isBusyRef = useRef(false)   // True while a request is in-flight
+  const latencyBuf = useRef([])      // Rolling latency samples
   const captureTimesRef = useRef([])      // For capture FPS calculation
   const responseTimesRef = useRef([])     // For response FPS calculation
 
   // ── State (triggers re-render) ────────────────────────────────────────────
-  const [isRunning, setIsRunning]         = useState(false)
-  const [isLoading, setIsLoading]         = useState(false)   // Initializing camera
-  const [isProcessing, setIsProcessing]   = useState(false)   // Request in-flight
-  const [cameraError, setCameraError]     = useState(null)
-  const [backendError, setBackendError]   = useState(null)
+  const [isRunning, setIsRunning] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)   // Initializing camera
+  const [isProcessing, setIsProcessing] = useState(false)   // Request in-flight
+  const [cameraError, setCameraError] = useState(null)
+  const [backendError, setBackendError] = useState(null)
 
   const [detectionResult, setDetectionResult] = useState(null)
-  const [processedFrame, setProcessedFrame]   = useState(null)
-  const [stats, setStats]                     = useState(initialStats)
-  const [sessionLog, setSessionLog]           = useState([])
+  const [processedFrame, setProcessedFrame] = useState(null)
+  const [stats, setStats] = useState(initialStats)
+  const [sessionLog, setSessionLog] = useState([])
 
-  const [mode, setMode] = useState("live") 
-// "live" | "upload" | "rtsp"
+  const [mode, setMode] = useState("live")
+  // "live" | "upload" | "rtsp"
+
+  const [uploadedFile, setUploadedFile] = useState(null)
+
+  const handleFileUpload = useCallback((file) => {
+    if (!file) return
+
+    setUploadedFile(file)
+    setMode("upload")   // 🔥 AUTO SWITCH
+  }, [])
 
   // ── Processing options (controlled by UI toggles) ─────────────────────────
   const [options, setOptions] = useState({
     enableVehicleDetection: true,
-    enableOCR:              true,
-    captureIntervalMs:      DEFAULT_CAPTURE_INTERVAL_MS,
+    enableOCR: true,
+    captureIntervalMs: DEFAULT_CAPTURE_INTERVAL_MS,
   })
 
   // ── Capture interval reactive to options ─────────────────────────────────
@@ -66,6 +75,7 @@ export function useDetection() {
   // ─── Camera Initialization ─────────────────────────────────────────────────
 
   const startCamera = useCallback(async () => {
+    if (mode !== "live") return   // prevent wrong mode
     setIsLoading(true)
     setCameraError(null)
     setBackendError(null)
@@ -73,9 +83,9 @@ export function useDetection() {
     try {
       const constraints = {
         video: {
-          width:     { ideal: 1280, max: 1920 },
-          height:    { ideal: 720,  max: 1080 },
-          frameRate: { ideal: 30,   max: 60 },
+          width: { ideal: 1280, max: 1920 },
+          height: { ideal: 720, max: 1080 },
+          frameRate: { ideal: 30, max: 60 },
           facingMode: 'environment',   // Prefer rear camera on mobile
         },
         audio: false,
@@ -96,7 +106,7 @@ export function useDetection() {
       if (!canvasRef.current) {
         canvasRef.current = document.createElement('canvas')
       }
-      canvasRef.current.width  = width
+      canvasRef.current.width = width
       canvasRef.current.height = height
 
       setIsRunning(true)
@@ -115,8 +125,13 @@ export function useDetection() {
         setCameraError(`Camera error: ${err.message}`)
       }
     }
-  }, []) // eslint-disable-line
+  }, [mode]) // eslint-disable-line
 
+  useEffect(() => {
+    if (mode !== "live" && isRunning) {
+      stopCamera()
+    }
+  }, [mode, isRunning, stopCamera])
   // ─── Stop Camera + Cleanup ─────────────────────────────────────────────────
 
   const stopCamera = useCallback(() => {
@@ -241,33 +256,33 @@ export function useDetection() {
       const hasEvent = result.speedSigns.length > 0 || result.violation.status === 'VIOLATION'
       if (hasEvent) {
         const logEntry = {
-          id:           Date.now(),
-          timestamp:    new Date().toISOString(),
-          frameId:      result.frameId,
-          speedLimit:   result.currentSpeedLimit,
+          id: Date.now(),
+          timestamp: new Date().toISOString(),
+          frameId: result.frameId,
+          speedLimit: result.currentSpeedLimit,
           vehicleCount: result.vehicles.length,
-          signCount:    result.speedSigns.length,
-          status:       result.violation.status,
+          signCount: result.speedSigns.length,
+          status: result.violation.status,
           vehicleSpeed: result.violation.speed,
-          latencyMs:    Math.round(latency),
+          latencyMs: Math.round(latency),
         }
         setSessionLog((prev) => [logEntry, ...prev].slice(0, MAX_LOG_ENTRIES))
       }
 
       // Update aggregate stats
       setStats((prev) => {
-        const captureFps  = calculateFps(captureTimesRef.current)
+        const captureFps = calculateFps(captureTimesRef.current)
         const responseFps = calculateFps(responseTimesRef.current)
         return {
-          captureFps:       Math.round(captureFps * 10) / 10,
-          responseFps:      Math.round(responseFps * 10) / 10,
-          avgLatencyMs:     Math.round(avgLatency),
-          totalFrames:      prev.totalFrames + 1,
-          totalDetections:  prev.totalDetections + result.speedSigns.length,
-          totalViolations:  result.violation.status === 'VIOLATION'
-                              ? prev.totalViolations + 1
-                              : prev.totalViolations,
-          droppedFrames:    prev.droppedFrames,
+          captureFps: Math.round(captureFps * 10) / 10,
+          responseFps: Math.round(responseFps * 10) / 10,
+          avgLatencyMs: Math.round(avgLatency),
+          totalFrames: prev.totalFrames + 1,
+          totalDetections: prev.totalDetections + result.speedSigns.length,
+          totalViolations: result.violation.status === 'VIOLATION'
+            ? prev.totalViolations + 1
+            : prev.totalViolations,
+          droppedFrames: prev.droppedFrames,
         }
       })
 
@@ -275,8 +290,8 @@ export function useDetection() {
       if (err.isAbort) return   // Intentional cancel — not an error
       setBackendError(
         err.isTimeout ? 'Backend timeout — request took too long'
-        : err.isNetwork ? 'Backend unreachable — check FastAPI server'
-        : `Backend error: ${err.message || err.detail || 'Unknown'}`
+          : err.isNetwork ? 'Backend unreachable — check FastAPI server'
+            : `Backend error: ${err.message || err.detail || 'Unknown'}`
       )
     } finally {
       isBusyRef.current = false
@@ -317,6 +332,9 @@ export function useDetection() {
     stopCamera,
     updateOption,
     clearLog,
+    mode,
+    setMode,
+    handleFileUpload,
   }
 }
 
