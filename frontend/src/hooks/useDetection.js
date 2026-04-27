@@ -49,6 +49,8 @@ export function useDetection() {
   const [violation, setViolation] = useState(null)
   const [speedLimit, setSpeedLimit] = useState(null)
 
+  const lastValidLimitRef = useRef(null)
+
   const [mode, setMode] = useState("live")
   // "live" | "upload" | "rtsp"
 
@@ -238,10 +240,13 @@ export function useDetection() {
       )
 
       // Normalize speed limit safely
-      const limit =
-        result.currentSpeedLimit ??
-        result.violation?.limit ??
-        null
+      const rawLimit = result.currentSpeedLimit ?? result.violation?.limit
+
+      if (rawLimit != null) {
+        lastValidLimitRef.current = rawLimit
+      }
+
+      const limit = lastValidLimitRef.current
 
       const speed =
         result.violation?.speed ??
@@ -255,7 +260,7 @@ export function useDetection() {
           ? speed - limit
           : null
 
-      setSpeedLimit(limit)
+      setSpeedLimit(prev => limit ?? prev)
 
       const safeViolation = {
         status,
@@ -264,6 +269,8 @@ export function useDetection() {
         excess
       }
       setViolation(safeViolation)
+
+
 
       const latency = performance.now() - requestStart
 
@@ -282,7 +289,13 @@ export function useDetection() {
       }
 
       // Update detection result
-      setDetectionResult(result)
+      setDetectionResult(prev => ({
+        ...prev,
+        frameId: result.frameId,
+        annotatedFrame: result.annotatedFrame,
+        vehicles: result.vehicles,
+        speedSigns: result.speedSigns
+      }))
       setBackendError(null)
 
       // Append to session log if there are detections or violations
