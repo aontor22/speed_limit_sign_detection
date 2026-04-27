@@ -36,3 +36,10 @@
 2026-04-24 22:52:04 [INFO    ] FastAPI — Video done: 80 frames in 74.25s (1.1 eff-fps)
 2026-04-24 22:53:06 [INFO    ] FastAPI — process-media: 'road1001.jpeg' kind=image skip=2
 2026-04-24 22:53:21 [INFO    ] FastAPI — process-media: 'road1002.jpeg' kind=image skip=2
+2026-04-27 22:06:35 [INFO    ] FastAPI — Loading ML pipeline components…
+2026-04-27 22:06:37 [INFO    ] FastAPI — ML pipeline ready.
+2026-04-27 22:23:16 [INFO    ] FastAPI — process-media: '20.png' kind=image skip=2
+2026-04-27 22:26:08 [INFO    ] FastAPI — process-media: '40.png' kind=image skip=2
+2026-04-27 22:30:53 [INFO    ] FastAPI — process-media: '20.png' kind=image skip=2
+2026-04-27 22:34:24 [INFO    ] FastAPI — process-media: 'video.mp4' kind=video skip=2
+2026-04-27 22:34:25 [INFO    ] FastAPI — Video probe: 161 frames @ 24.0fps = 6.7s  frame_skip=2

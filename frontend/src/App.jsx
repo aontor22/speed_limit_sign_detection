@@ -52,6 +52,9 @@ export default function App() {
     stopCamera,
     updateOption,
     clearLog,
+    mode,
+    setMode,
+    handleFileUpload,
   } = useDetection()
 
   return (
@@ -115,8 +118,10 @@ export default function App() {
 
             {/* Upload Panel (NEW - TOP CONTROL INPUT) */}
             <MediaUploadPanel
+              mode={mode}
+              setMode={setMode}
+              handleFileUpload={handleFileUpload}
               isRunning={isRunning}
-              onOptionChange={updateOption}
             />
 
             {/* Controls at bottom */}

@@ -127,11 +127,7 @@ export function useDetection() {
     }
   }, [mode]) // eslint-disable-line
 
-  useEffect(() => {
-    if (mode !== "live" && isRunning) {
-      stopCamera()
-    }
-  }, [mode, isRunning, stopCamera])
+
   // ─── Stop Camera + Cleanup ─────────────────────────────────────────────────
 
   const stopCamera = useCallback(() => {
@@ -162,6 +158,12 @@ export function useDetection() {
     setIsProcessing(false)
     setProcessedFrame(null)
   }, [])
+
+  useEffect(() => {
+    if (mode !== "live" && isRunning) {
+      stopCamera()
+    }
+  }, [mode, isRunning, stopCamera])
 
   // Cleanup on unmount
   useEffect(() => () => stopCamera(), [stopCamera])
