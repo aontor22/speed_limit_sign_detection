@@ -46,6 +46,9 @@ export function useDetection() {
   const [stats, setStats]                     = useState(initialStats)
   const [sessionLog, setSessionLog]           = useState([])
 
+  const [mode, setMode] = useState("live") 
+// "live" | "upload" | "rtsp"
+
   // ── Processing options (controlled by UI toggles) ─────────────────────────
   const [options, setOptions] = useState({
     enableVehicleDetection: true,
