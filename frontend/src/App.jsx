@@ -34,6 +34,8 @@ import DetectionStats from './components/Detection/DetectionStats.jsx'
 import ControlPanel from './components/Controls/ControlPanel.jsx'
 import SessionLog from './components/Logs/SessionLog.jsx'
 import MediaUploadPanel from './components/MediaUpload/MediaUploadPanel.jsx'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
 export default function App() {
   const {
@@ -56,6 +58,25 @@ export default function App() {
     setMode,
     handleFileUpload,
   } = useDetection()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const path = location.pathname.replace('/', '')
+
+    if (path === 'live') setMode('live')
+    else if (path === 'rtsp') setMode('rtsp')
+    else if (path === 'image' || path === 'video' || path === 'media')
+      setMode('upload')
+
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (mode === 'live') navigate('/live')
+    else if (mode === 'rtsp') navigate('/rtsp')
+    else if (mode === 'upload') navigate('/media')
+  }, [mode])
 
   return (
     <div className="min-h-screen bg-slate-950 bg-grid-pattern bg-grid-sm flex flex-col font-ui">

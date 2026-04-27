@@ -46,6 +46,9 @@ export function useDetection() {
   const [stats, setStats] = useState(initialStats)
   const [sessionLog, setSessionLog] = useState([])
 
+  const [violation, setViolation] = useState(null)
+  const [speedLimit, setSpeedLimit] = useState(null)
+
   const [mode, setMode] = useState("live")
   // "live" | "upload" | "rtsp"
 
@@ -234,6 +237,34 @@ export function useDetection() {
         abortRef.current.signal,
       )
 
+      // Normalize speed limit safely
+      const limit =
+        result.currentSpeedLimit ??
+        result.violation?.limit ??
+        null
+
+      const speed =
+        result.violation?.speed ??
+        null
+
+      const status =
+        result.violation?.status ?? "UNKNOWN"
+
+      const excess =
+        limit != null && speed != null
+          ? speed - limit
+          : null
+
+      setSpeedLimit(limit)
+
+      const safeViolation = {
+        status,
+        speed,
+        limit,
+        excess
+      }
+      setViolation(safeViolation)
+
       const latency = performance.now() - requestStart
 
       // Update response FPS buffer
@@ -255,17 +286,19 @@ export function useDetection() {
       setBackendError(null)
 
       // Append to session log if there are detections or violations
-      const hasEvent = result.speedSigns.length > 0 || result.violation.status === 'VIOLATION'
+      const hasEvent =
+        result.speedSigns.length > 0 ||
+        status === 'VIOLATION'
       if (hasEvent) {
         const logEntry = {
           id: Date.now(),
           timestamp: new Date().toISOString(),
           frameId: result.frameId,
-          speedLimit: result.currentSpeedLimit,
+          speedLimit: limit,
           vehicleCount: result.vehicles.length,
           signCount: result.speedSigns.length,
-          status: result.violation.status,
-          vehicleSpeed: result.violation.speed,
+          status,
+          vehicleSpeed: speed,
           latencyMs: Math.round(latency),
         }
         setSessionLog((prev) => [logEntry, ...prev].slice(0, MAX_LOG_ENTRIES))
@@ -281,7 +314,7 @@ export function useDetection() {
           avgLatencyMs: Math.round(avgLatency),
           totalFrames: prev.totalFrames + 1,
           totalDetections: prev.totalDetections + result.speedSigns.length,
-          totalViolations: result.violation.status === 'VIOLATION'
+          totalViolations: status === 'VIOLATION'
             ? prev.totalViolations + 1
             : prev.totalViolations,
           droppedFrames: prev.droppedFrames,
@@ -328,6 +361,9 @@ export function useDetection() {
     stats,
     sessionLog,
     options,
+    violation,
+    speedLimit,
+
 
     // Actions
     startCamera,
