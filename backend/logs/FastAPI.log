@@ -44,3 +44,14 @@
 2026-04-27 22:34:24 [INFO    ] FastAPI — process-media: 'video.mp4' kind=video skip=2
 2026-04-27 22:34:25 [INFO    ] FastAPI — Video probe: 161 frames @ 24.0fps = 6.7s  frame_skip=2
 2026-04-27 22:35:22 [INFO    ] FastAPI — Video done: 80 frames in 56.92s (1.4 eff-fps)
+2026-04-27 22:38:33 [INFO    ] FastAPI — process-media: 'test_video.mp4' kind=video skip=2
+2026-04-27 22:38:33 [INFO    ] FastAPI — Video probe: 608 frames @ 59.9fps = 10.1s  frame_skip=2
+2026-04-27 22:40:35 [WARNING ] FastAPI — max_duration_s=120s reached. Stopping.
+2026-04-27 22:40:35 [INFO    ] FastAPI — Video done: 85 frames in 121.61s (0.7 eff-fps)
+2026-04-27 22:53:17 [INFO    ] FastAPI — process-media: 'test_video.mp4' kind=video skip=2
+2026-04-27 22:53:17 [INFO    ] FastAPI — Video probe: 608 frames @ 59.9fps = 10.1s  frame_skip=2
+2026-04-27 22:55:21 [WARNING ] FastAPI — max_duration_s=120s reached. Stopping.
+2026-04-27 22:55:21 [INFO    ] FastAPI — Video done: 72 frames in 123.32s (0.6 eff-fps)
+2026-04-27 23:34:13 [INFO    ] FastAPI — FastAPI server shut down.
+2026-04-27 23:34:36 [INFO    ] FastAPI — Loading ML pipeline components…
+2026-04-27 23:34:37 [INFO    ] FastAPI — ML pipeline ready.
